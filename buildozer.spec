@@ -1,39 +1,28 @@
 [app]
 
-# اسم التطبيق
-title = MUGIWARA & LUFFY AI
-
-# اسم الحزمة
-package.name = mugiluffyai
-
-# اسم الحزمة الكامل (فريد)
+title = MUGIWARA LUFFY AI
+package.name = mugiwara_luffy
 package.domain = com.mugiwara.luffy
-
-# الإصدار
 version = 1.0.0
 
-# لغة التطبيق
 source.dir = .
-source.include_exts = py,png,jpg,jpeg,gif,wav,mp3,ttf
+source.include_exts = py,png,jpg,jpeg,wav,mp3
 
-# المتطلبات
 requirements = python3,kivy
 
-# أذونات Android
-android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE,READ_MEDIA_IMAGES
+android.permissions = INTERNET,READ_EXTERNAL_STORAGE
 
-# أيقونة التطبيق
-icon.filename = %(source.dir)s/icon.png
+orientation = portrait
+fullscreen = 0
 
-# التوقيع
-android.api = 31
+# 🔥 إعدادات أندرويد المهمة
 android.minapi = 21
 android.sdk.api_level = 31
-android.ndk = 23b
-android.sdk = 24
+android.ndk = 28c
 
-# اسم المخرجات
-android.filename = MugiLuffyAI-v1.0
+# أيقونة (اختياري إذا موجودة)
+# icon.filename = %(source.dir)s/icon.png
 
-# صورة الشاشة الافتتاحية
-presplash.filename = %(source.dir)s/splash.png
+[buildozer]
+log_level = 2
+warn_on_root = 1
