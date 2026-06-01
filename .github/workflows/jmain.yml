@@ -1,41 +1,32 @@
-name: Build APK
+- name: Install dependencies
+  run: |
+    sudo apt update
+    sudo apt install -y \
+      git zip unzip openjdk-17-jdk python3-pip \
+      autoconf automake libtool pkg-config \
+      zlib1g-dev libncurses5-dev libffi-dev \
+      cmake libssl-dev
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+    pip install --upgrade pip
+    pip install buildozer cython virtualenv
 
-jobs:
-  build:
-    runs-on: ubuntu-22.04
+- name: Install Android SDK
+  run: |
+    mkdir -p $HOME/android-sdk/cmdline-tools
+    cd $HOME/android-sdk
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
+    unzip tools.zip
+    mv cmdline-tools latest
+    mkdir -p cmdline-tools
+    mv latest cmdline-tools/
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+    yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            git zip unzip openjdk-17-jdk python3-pip \
-            autoconf automake libtool pkg-config \
-            zlib1g-dev libncurses5-dev libncursesw5-dev \
-            cmake libffi-dev libssl-dev
+    $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+      "platform-tools" \
+      "platforms;android-33" \
+      "build-tools;33.0.2"
 
-          python -m pip install --upgrade pip
-          pip install cython virtualenv buildozer
-
-      - name: Build APK
-        run: |
-          buildozer android debug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: MugiLuffyAI-APK
-          path: bin/*.apk
+    echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+    echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
