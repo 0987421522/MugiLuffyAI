@@ -1,0 +1,32 @@
+- name: Install dependencies
+  run: |
+    sudo apt update
+    sudo apt install -y \
+      git zip unzip openjdk-17-jdk python3-pip \
+      autoconf automake libtool pkg-config \
+      zlib1g-dev libncurses5-dev libffi-dev \
+      cmake libssl-dev
+
+    pip install --upgrade pip
+    pip install buildozer cython virtualenv
+
+- name: Install Android SDK
+  run: |
+    mkdir -p $HOME/android-sdk/cmdline-tools
+    cd $HOME/android-sdk
+
+    wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
+    unzip tools.zip
+    mv cmdline-tools latest
+    mkdir -p cmdline-tools
+    mv latest cmdline-tools/
+
+    yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+
+    $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+      "platform-tools" \
+      "platforms;android-33" \
+      "build-tools;33.0.2"
+
+    echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+    echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
